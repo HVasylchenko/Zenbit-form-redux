@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "zenbit-form-redux",
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
