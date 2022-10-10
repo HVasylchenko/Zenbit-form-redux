@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, password } from "../redux/reducers/authReducer";
+import axios from "axios";
 
 function LoginPage() {
   const state = useSelector((state) => state.auth);
@@ -16,11 +17,30 @@ function LoginPage() {
     setPasswordValue(event.target.value);
   };
 
-  const handlerButton = () => {
+  const dispatchToStore = () => {
     dispatch(login(loginValue));
     dispatch(password(passwordValue));
     setLoginValue("");
     setPasswordValue("");
+  };
+
+  const sendToMongoDB = () => {
+    // axios.post("http://localhost:5000/",
+    axios.post("https://sleepy-fjord-65800.herokuapp.com/",
+      {
+        email: state.login,
+        password: state.password
+      },
+      {
+        headers: {"Access-Control-Allow-Origin": "*"}
+      }
+    )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -45,8 +65,13 @@ function LoginPage() {
         onChange={handlerPassword}
       />
       <div>
-        <button className="btn btn-primary mt-2 mb-2" onClick={handlerButton}>
-        Dispatch to store
+        <button className="btn btn-primary mt-2 mb-2" onClick={dispatchToStore}>
+          Dispatch to store
+        </button>
+      </div>
+      <div>
+        <button className="btn btn-primary mt-2 mb-2" onClick={sendToMongoDB}>
+          Send to database after Dispatch
         </button>
       </div>
       <div>{state.login}</div>
